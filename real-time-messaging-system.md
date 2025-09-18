@@ -6,7 +6,7 @@ Why I chose this design to deep dive?
    - broad casting platform(e.g twitter)
    - notifications platform for social media network(i.e facebook, instagram), we can extend this design for SMS, Email and push notifications
 
-- Goal is to design a distributed and scalable real-time notification system with multiple microservice instances and a distributed session store. The       system efficiently handles both online and offline users. 
+- Goal is to design a distributed and scalable real-time notification system with multiple microservice instances and a distributed session store. The system efficiently handles both online and offline users. My intention is to build gradual understanding of how exactly websocket and Redis data store plus Redis Pub/Sub works. So I explained it in two steps first at high level and then in detail once you get high level understanding. Hopee you all enjoy reading it!
 
 
 Lets first start with something simple for understading i.e only one server instance for each service and then in second diagram we will move to scalable and distributed archiecture i.e multi server instance architecture
@@ -95,7 +95,7 @@ we want to build distributed and scalable system.
 
 
 
- ### Detailed work flow 
+ ## Detailed work flow 
  
  - **Work flow part 1**:  websocket connection establishment and user session details (redis + in memory local storage) 
 
