@@ -91,7 +91,7 @@ we want to build distributed and scalable system.
 
  ### Detailed work flow 
  
- - **Work flow part 1**:  websocket connection establishment and user session details (redis plus in memory local storage) 
+ - **Work flow part 1**:  websocket connection establishment and user session details (redis + in memory local storage) 
 
  <img width="688" height="658" alt="image" src="https://github.com/user-attachments/assets/465d5d13-5f12-4045-a3f4-ac65a2ac7e63" />
 
