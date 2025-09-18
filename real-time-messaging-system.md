@@ -18,8 +18,9 @@ Each WebSocket instance stores connection metadata in distributed Redis, keyed b
 
 When Users are online and log in to system following endpoint is called and it establish connectios to websocket service using websocket protocol(persistence connection)
 
+```bash
  $ GET /ws?userId=<userId>
-
+```
 
 Example:
 
