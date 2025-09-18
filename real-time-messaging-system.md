@@ -6,7 +6,7 @@ We are implementing a distributed and scalable real-time notification system wit
 Lets define what we are going to do user4 is going to interact with our system with intention to send
 notification to user1, user2 and user3, user1 and user2 are online so they should get real time notificatin that is our goal 
 
-## Details (expected behaviour with architecture details of the system)
+## Details (system work flow with architecture details)
 
 ### User Message/Notification Retrieval (WebSocket Service)
 
