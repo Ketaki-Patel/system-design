@@ -9,7 +9,7 @@ To kick things off, I’ll start with article related to real-time messaging sys
 
 Stay tuned for the first deep dive!
 
-### show casing Real Time Messaging System
+### Real Time Messaging System
 
 <img width="890" height="762" alt="image" src="https://github.com/user-attachments/assets/16c62b9b-dfc5-42ec-97aa-beea76b05e11" />
   
