@@ -19,7 +19,7 @@ Lets first start with something simple for understading i.e only one server inst
 
 - Online users (e.g., User1, User2) receive messagee instantly; offline users retrieve from the DB when they reconnect.
 
-## Utlimate Goal - saclable architecture
+## Our Goal - saclable architecture
 Lets define what our scalable systtem will do, we will undestand with example, lets say user4 is going to interact with our system with intention to send
 notification to user1, user2 and user3; user1 and user2 are online so they should get real time notification
 we want to build distributed and scalable system.
