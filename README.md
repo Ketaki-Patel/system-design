@@ -1,4 +1,4 @@
-### system-design
+### System-Design
 Jotting down nitty gritty details of system-design
 
 I recently implemented an alerting system with two microservices—Vitals Service and Alerts Service—using Spring WebFlux and Project Reactor.
