@@ -1,6 +1,6 @@
 # End-to-End Real Time Messaging System 
 
-Why I chose this as my first deep dive?
+Why I chose this design to deep dive?
 - This is such a versatile design requirement(i.e real time messaging) which makes backbone for very popular system design architectures like
    - real time chat service (e.g whatsapp, signal, telegram etc)
    - broad casting platform(e.g twitter)
