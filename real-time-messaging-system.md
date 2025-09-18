@@ -21,9 +21,9 @@ Lets first start with something simple for understading i.e only one server inst
 
 - The consuming instance stores it in the Notification DB, then publishes to Redis Pub/Sub channel "alerts".
 
-- Every WebSocket Service instance subscribed to "alerts" receives the payload, checks the centralized live_sessions keys to verify if user is online or offline if key is   found in datstore user is online if not found user is offline and if websocket service hosts the user’s WebSocketSession locally, it immediately pushes the message down the open WebSocket connection.
+- Every WebSocket Service instance subscribed to "alerts"(Redis Pub) receives the payload, checks the centralized live_sessions keys in Redis datstore to verify if user is online or offline if key is found in Redis datstore user is online if not found user is offline and if websocket service hosts the user’s WebSocketSession locally, it immediately pushes the message down the open WebSocket connection.
 
-- Online users (e.g., User1, User2) receive messagee instantly; offline users retrieve from the DB when they reconnect.
+- Online users (e.g., User1, User2) receive messagee instantly; offline users retrieve messages/notificaction from the DB when they reconnect.
 
 ## Our Goal - saclable architecture
 Lets define what our scalable systtem will do, we will undestand with example, lets say user4 is going to interact with our system with intention to send
