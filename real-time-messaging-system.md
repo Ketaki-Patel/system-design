@@ -1,6 +1,6 @@
 # End-to-End Real Time Messaging System 
 
-We are implementing a distributed and scalable real-time notification system with multiple microservice instances and a distributed session store. The       system efficiently handles both online and offline users. 
+Goal is to design a distributed and scalable real-time notification system with multiple microservice instances and a distributed session store. The       system efficiently handles both online and offline users. 
 
 
 Lets first start with something simple for understading i.e only one server instance for each service and then in second diagram we will move to scalable and distributed archiecture i.e multi server instance architecture
