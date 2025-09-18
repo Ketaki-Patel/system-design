@@ -98,6 +98,21 @@ we want to build distributed and scalable system.
  Each WebSocket server instance keeps a thread-safe map of userId → WebSocketSession inside its own memory, because only that live object can write bytes back to the 
  connected client.
 
+ - step 1. Client connects (first time)
+   - Client (User1 or User2) opens a WebSocket to your service:
+   ```bash
+   GET ws://example.com/ws?userId=user1
+   GET /ws://example.com/ws?userId=user2
+   ```
+   - The load balancer routes the request to one of the WebSocket Service instances (1/2/3).
+     Server accepts handshake; Spring creates WebSocketSession with session.getId() (e.g. sess-abc123).
+
+   - That instance stores the mapping in distributed Redis:
+    ```bash
+   live_sessions:user1 → sess-abc123:WS1
+   live_sessions:user2 → sess-def456:WS2  
+    ```
+
 
  - part 2 Message Creation (message creation → delivery)
  This diagram starts with a new message being created and shows how it travels through SNS → SQS → Notification Service → Redis Pub/Sub → WebSocket instances → connected
