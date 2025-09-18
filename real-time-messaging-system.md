@@ -1,4 +1,4 @@
-# End-to-End Real Time Messaging System (example.com)
+# End-to-End Real Time Messaging System 
 
 We are implementing a distributed and scalable real-time notification system with multiple microservice instances and a distributed session store. The       system efficiently handles both online and offline users. 
 
