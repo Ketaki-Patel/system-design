@@ -13,7 +13,7 @@ Stay tuned for the first deep dive!
 #### Why I chose this as my first deep dive?
 - This is such a versatile design requirement(i.e real time messaging) which makes backbone for very popular system design architectures like
     - real time chat service (e.g whatsapp, signal, telegram etc)
-    - broad casting platfor(e.g twitter)
+    - broad casting platform(e.g twitter)
     - notifications platform for social media network(i.e facebook, instagram), you can extends this design for SMS, Email and push notifications
 
 
