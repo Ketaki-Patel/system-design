@@ -6,7 +6,7 @@ We are implementing a distributed and scalable real-time notification system wit
 Lets define what we are going to do user4 is going to interact with our system with intention to send
 notification to user1, user2 and user3, user1 and user2 are online so they should get real time notificatin that is our goal 
 
-## Details (system work flow with architecture details)
+## High level system work flow with architecture details
 
 ### User Message/Notification Retrieval (WebSocket Service)
 
@@ -65,6 +65,7 @@ notification to user1, user2 and user3, user1 and user2 are online so they shoul
      - Offline users (User3) will have their messages stored in the Notification DB for retrieval when they reconnect.
     
  ### Sotware System Design
+ 
  
    <img width="890" height="762" alt="image" src="https://github.com/user-attachments/assets/16c62b9b-dfc5-42ec-97aa-beea76b05e11" />
 
