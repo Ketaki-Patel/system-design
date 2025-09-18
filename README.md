@@ -20,8 +20,8 @@ Stay tuned for the first deep dive!
 
 <img width="890" height="762" alt="image" src="https://github.com/user-attachments/assets/16c62b9b-dfc5-42ec-97aa-beea76b05e11" />
   
-1. Real Time Messaging System 
+1. [Real Time Messaging System](https://github.com/Ketaki-Patel/system-design/blob/main/real-time-messaging-system.md)
 2. Notifiction Service plaform
-   More to come 
+   
 
 
