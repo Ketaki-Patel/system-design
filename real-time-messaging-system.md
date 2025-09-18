@@ -146,8 +146,8 @@ we want to build distributed and scalable system.
     - User3 is offline, but the message is already stored in Notification DB for retrieval when they reconnect.
       
 ## Extension to this architecture - Notification Service Platform
-  This architecture real time messagee processing we can exteend and make it notification service platform by supporting notification delivery channel like
-  SMS, Email and Push Notificaton
+  This architecture real time messagee processing we can easily extend and make it notification service platform by supporting notification delivery channel like
+  SMS, Email and Push Notificaton as well
 
 <img width="941" height="806" alt="image" src="https://github.com/user-attachments/assets/def4caa0-368e-4f9f-94e2-bbcac6838ba8" />
 
