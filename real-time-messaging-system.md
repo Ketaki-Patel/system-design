@@ -143,7 +143,18 @@ we want to build distributed and scalable system.
     - If it finds a session with its own instance name (e.g., sess-abc123:Instance1) and holds that WebSocketSession locally, it calls:
       session.sendMessage(new TextMessage(payloadJson));
     - User1 and User2 (online) receive the message immediately.
-    - User3 is offline, but the message is already stored in Notification DB for retrieval when they reconnect. 
+    - User3 is offline, but the message is already stored in Notification DB for retrieval when they reconnect.
+      
+## Extension to this architecture - Notification Service Platform
+  This architecture real time messagee processing we can exteend and make it notification service platform by supporting notification delivery channel like
+  SMS, Email and Push Notificaton
+
+<img width="941" height="806" alt="image" src="https://github.com/user-attachments/assets/def4caa0-368e-4f9f-94e2-bbcac6838ba8" />
+
+
+
+   
+      
 
 
 
