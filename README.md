@@ -11,6 +11,13 @@ Stay tuned for the first deep dive!
 
 ### Real Time Messaging System
 
+#### Why I chose this as my first deep dive?
+- This is such a versatile design requirement(i.e real time messaging) which makes backbone for very popular system design architectures like
+    - real time chat service (e.g whatsapp, signal, telegram etc)
+    - broad casting platfor(e.g twitter)
+    - notifications platform for social media network(i.e facebook, instagram), you can extends this design for SMS, Email and push notifications
+
+
 <img width="890" height="762" alt="image" src="https://github.com/user-attachments/assets/16c62b9b-dfc5-42ec-97aa-beea76b05e11" />
   
 1. Real Time Messaging System 
