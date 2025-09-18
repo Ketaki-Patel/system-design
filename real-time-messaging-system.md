@@ -102,7 +102,7 @@ we want to build distributed and scalable system.
    - Client (User1 or User2) opens a WebSocket to your service:
    ```bash
    GET ws://example.com/ws?userId=user1
-   GET /ws://example.com/ws?userId=user2
+   GET ws://example.com/ws?userId=user2
    ```
    - The load balancer routes the request to one of the WebSocket Service instances (1/2/3).
      Server accepts handshake; Spring creates WebSocketSession with session.getId() (e.g. sess-abc123).
