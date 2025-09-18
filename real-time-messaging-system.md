@@ -30,7 +30,7 @@ we want to build distributed and scalable system.
 
 ## High level system work flow with architecture details
 
-### User Message/Notification Retrieval (WebSocket Service)
+### 1️⃣ User Message/Notification Retrieval (WebSocket Service)
 
 - Users (e.g., User1 and User2) connect to the WebSocket Service using a WebSocket client.
 
@@ -115,7 +115,7 @@ we want to build distributed and scalable system.
 
 
 
- - Work flow part 2 : Message Creation (message creation → delivery)
+ - **Work flow part 2** : Message Creation (message creation → delivery)
  This diagram starts with a new message being created and shows how it travels through SNS → SQS → Notification Service → Redis Pub/Sub → WebSocket instances → connected
  users.
 
