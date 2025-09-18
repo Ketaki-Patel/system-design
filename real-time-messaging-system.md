@@ -28,6 +28,42 @@ notification to user1, user2 and user3, user1 and user2 are online so they shoul
 
 - User3 is currently offline.
 
+### 2️⃣ Notification Publishing Flow
+
+- Message Creation:
+
+  - Notification Generator sevice creates meessaage and decides whom to send that message, A message is sent for multiple users (User1, User2, User3).
+
+  - SNS / SQS Integration:
+    
+    - The message is published to an SNS topic.
+
+    -  Notification Service instances (three instances) subscribe to the SNS topic via SQS.
+ 
+- Notification Processing:
+
+  -  Notification Persistence:
+
+     - Notification Service consumes the message from SQS.
+
+     - It persists the notification in a central Notification DB.
+
+  -  Real-Time Delivery via Redis Pub/Sub:
+
+     - The Notification Service publishes the message to a Redis channel, e.g., "alerts".
+
+     -  WebSocket Service instances subscribe to the Redis "alerts" channel.
+
+ - WebSocketService Push to Online Users using websocket protocol:
+
+   - Redis listeners in each WebSocket Service instance receive the message.
+
+   - Each WebSocket instance checks distributed Redis session store to determine which users are online on that instance.
+
+     - For online users (User1, User2), the message is pushed in real-time via the WebSocket protocol.
+
+     - Offline users (User3) will have their messages stored in the Notification DB for retrieval when they reconnect.
+
 
 
 
