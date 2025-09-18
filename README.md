@@ -1,5 +1,4 @@
-### System-Design
-Jotting down nitty gritty details of system-design
+# System Design
 
 I recently implemented an alerting system with two microservices—Vitals Service and Alerts Service—using Spring WebFlux and Project Reactor.
 
@@ -9,7 +8,7 @@ To kick things off, I’ll start with article related to real-time messaging sys
 
 Stay tuned for the first deep dive!
 
-### Real Time Messaging System
+## [Real Time Messaging System(click for detailed info)](https://github.com/Ketaki-Patel/system-design/blob/main/real-time-messaging-system.md)
 
 #### Why I chose this as my first deep dive?
 - This is such a versatile design requirement(i.e real time messaging) which makes backbone for very popular system design architectures like
