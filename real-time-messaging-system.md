@@ -4,7 +4,7 @@ Why I chose this design to deep dive?
 - This is such a versatile design requirement(i.e real time messaging) which makes backbone for very popular system design architectures like
    - real time chat service (e.g whatsapp, signal, telegram etc)
    - broad casting platform(e.g twitter)
-   - notifications platform for social media network(i.e facebook, instagram), you can extends this design for SMS, Email and push notifications
+   - notifications platform for social media network(i.e facebook, instagram), we can extend this design for SMS, Email and push notifications
 
 - Goal is to design a distributed and scalable real-time notification system with multiple microservice instances and a distributed session store. The       system efficiently handles both online and offline users. 
 
