@@ -91,7 +91,7 @@ we want to build distributed and scalable system.
 
  ### Detailed work flow 
  
- - part 1 websocket connection establishment and user session details (redis plus in memory local storage) 
+ - **Work flow part 1**:  websocket connection establishment and user session details (redis plus in memory local storage) 
 
  <img width="688" height="658" alt="image" src="https://github.com/user-attachments/assets/465d5d13-5f12-4045-a3f4-ac65a2ac7e63" />
 
@@ -114,7 +114,8 @@ we want to build distributed and scalable system.
     ```
 
 
- - part 2 Message Creation (message creation → delivery)
+
+ - ** Work flow part 2**: Message Creation (message creation → delivery)
  This diagram starts with a new message being created and shows how it travels through SNS → SQS → Notification Service → Redis Pub/Sub → WebSocket instances → connected
  users.
 
