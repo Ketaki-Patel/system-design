@@ -115,13 +115,35 @@ we want to build distributed and scalable system.
 
 
 
- - ** Work flow part 2**: Message Creation (message creation → delivery)
+ - Work flow part 2 : Message Creation (message creation → delivery)
  This diagram starts with a new message being created and shows how it travels through SNS → SQS → Notification Service → Redis Pub/Sub → WebSocket instances → connected
  users.
 
    <img width="550" height="878" alt="image" src="https://github.com/user-attachments/assets/3d428387-a7c2-4403-a1bf-71fe966affbe" />
 
+- step 2. Message Creation & Queueing
 
+   - User4 triggers a notification destined for User1, User2, User3.
+   - Notification Generator publishes to SNS, which fans out to SQS.
+
+- step 3. Notification Processing
+
+  - Any of the three Notification Service instances consumes the SQS message.
+  - It saves the payload to Notification DB for persistence.
+
+- step 4. Real-time Fan-out
+  - The same Notification Service instance publishes the message JSON to the Redis channel “alerts”.
+
+- step 5. WebSocket Delivery
+
+  - All three WebSocket Service instances are subscribed to "alerts".
+  - Each instance:
+    - Reads the user list from the message.
+    - Checks Redis if user key i.e live_sessions:<userId>.
+    - If it finds a session with its own instance name (e.g., sess-abc123:Instance1) and holds that WebSocketSession locally, it calls:
+      session.sendMessage(new TextMessage(payloadJson));
+    - User1 and User2 (online) receive the message immediately.
+    - User3 is offline, but the message is already stored in Notification DB for retrieval when they reconnect. 
 
 
 
