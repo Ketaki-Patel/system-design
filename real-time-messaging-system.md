@@ -8,7 +8,7 @@ notification to user1, user2 and user3, user1 and user2 are online so they shoul
 
 ## Details (what we are trying to build or expected behaviour of the system)
 
-### User Notification Retrieval (WebSocket Service)
+### User Message/Notification Retrieval (WebSocket Service)
 
 - Users (e.g., User1 and User2) connect to the WebSocket Service using a WebSocket client.
 
@@ -63,6 +63,10 @@ notification to user1, user2 and user3, user1 and user2 are online so they shoul
      - For online users (User1, User2), the message is pushed in real-time via the WebSocket protocol.
 
      - Offline users (User3) will have their messages stored in the Notification DB for retrieval when they reconnect.
+    
+ ### Sotware System Design
+ 
+   <img width="890" height="762" alt="image" src="https://github.com/user-attachments/assets/16c62b9b-dfc5-42ec-97aa-beea76b05e11" />
 
 
 
