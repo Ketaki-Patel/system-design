@@ -164,8 +164,5 @@ This document can now serve as a **primer for your media processing system desig
 
 ---
 
-If you want, I can also **draw a polished visual diagram** (PNG/SVG) showing **all services, S3 folders, message queues, and DB** in a ready-to-use format for documentation or presentations.
-
-Do you want me to create that image?
 
 
