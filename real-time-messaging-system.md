@@ -22,7 +22,14 @@ Lets first start with something simple for understading i.e only one server inst
 
 - The consuming instance stores it in the Notification DB, then publishes to Redis Pub/Sub channel "alerts".
 
-- All websocket instances are subscribed to "alerts"(Redis Pub). Every WebSocket Service instance will receive the payload due to pub/sub fanout settings, checks the centralized live_sessions keys in Redis datstore to verify if user is online or offline if key is found in Redis datstore user is online if not found user is offline and if websocket service hosts the user’s WebSocketSession locally means user has websocket connection open with this host, so service will immediately pushes the message down the open WebSocket connection.
+- All WebSocket service instances subscribe to the `"alerts"` channel in Redis Pub/Sub. When a payload is published, each instance receives it due to the Pub/Sub fanout
+  behavior. Each service instance then checks the centralized `live_sessions` keys in the Redis datastore to determine the user’s status:
+
+   - **Online:** If the key exists in Redis, the user is online.
+   - **Offline:** If the key does not exist, the user is offline.
+   - **Push message:** If the WebSocket service instance hosts the user’s `WebSocketSession` locally (i.e., the user has an active WebSocket connection with this
+     instance), the service immediately pushes the message through the open WebSocket connection.
+
 
 - Online users (e.g., User1, User2) receive messagee instantly; offline users retrieve messages/notificaction from the DB when they reconnect.
 
