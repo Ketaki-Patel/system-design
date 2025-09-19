@@ -21,6 +21,8 @@ This document explains the **high-level flow** of media processing—from upload
 
 6. **Playback** – User’s video player downloads the **master manifest**, selects a rendition, and adaptively switches quality during playback.
 
+For media processing background details --> https://github.com/Ketaki-Patel/system-design/blob/main/media-processing-primer.md
+
 
 <img width="573" height="800" alt="image" src="https://github.com/user-attachments/assets/5625f909-84e8-4446-b63e-fc28f1c344ee" />
 
