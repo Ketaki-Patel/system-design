@@ -36,7 +36,38 @@ The player:
 
 ---
 
-## 3️⃣ Example Renditions Table
+## 3️⃣ Original Source File (Before Any Processing)
+
+| Property          | Example Value                  |
+|-------------------|--------------------------------|
+| File Name         | `vacation.mov`                 |
+| Resolution        | 3840x2160 (4K)                 |
+| Duration          | 1 hour                         |
+| Codec             | ProRes / H.264 (camera output) |
+| Bitrate           | ~50 Mbps (high-quality capture)|
+| Approx File Size  | ~20 GB                          |
+
+This is the raw video as it comes from the camera or initial upload—large, high-bitrate, and not optimized for streaming.
+
+---
+
+## 🎯 Full-File Renditions (Before Chunking)
+
+These are the **complete transcoded files** produced from the original source **before** they are split into adaptive streaming segments.
+
+| Rendition Name | Resolution  | Approx Bitrate | Typical Devices        | Approx File Size (1-hour video)* |
+|----------------|------------|---------------|------------------------|----------------------------------|
+| Low            | 640x360    | ~0.6 Mbps     | Phones on slow data    | ~250 MB                          |
+| Medium         | 854x480    | ~1 Mbps       | Most mobile, tablets   | ~450 MB                          |
+| HD             | 1280x720   | ~2.5 Mbps     | Tablets, laptops       | ~1.1 GB                           |
+| Full HD        | 1920x1080  | ~5 Mbps       | Laptops, TVs           | ~2.2 GB                           |
+| 4K (optional)  | 3840x2160  | ~12 Mbps     | TVs, high-end monitors | ~5.3 GB                           |
+
+\*Estimates assume H.264 encoding at 30 fps and ~1-hour duration.  
+Actual sizes vary by codec, frame rate, and content complexity.
+
+
+## Example Renditions Table
 
 | Rendition | Resolution | Approx Bitrate | Typical Devices | Chunks or Full File? | Approx Chunk Size* |
 |-----------|-----------|---------------|----------------|----------------------|-------------------|
@@ -68,6 +99,11 @@ https://cdn.example.com/video123/fullhd/playlist.m3u8
 ## 5️⃣ Detailed Variant Playlist Example – 720p HD Rendition
 
 If the player selects the **720p HD** stream, it downloads the **variant playlist**.  
+
+```
+https://cdn.example.com/video123/high/playlist.m3u8
+```
+
 This file simply lists each 4-second video chunk with its full CDN URL:
 
 ```m3u8
@@ -94,15 +130,14 @@ The player downloads these sequentially and can switch to another rendition’s 
 
 ### **Section 6 – End-to-End Flow**
 
-```markdown
 ## 6️⃣ End-to-End Flow
 
-1. **Upload/Ingest** – Creator uploads raw `.mov` or `.mp4` file.  
+1. **Upload / Ingest** – Creator uploads raw `.mov` or `.mp4` file.  
 2. **Transcode** – Platform creates multiple renditions (different resolutions, bitrates, codecs).  
-3. **Package & Chunk** – Files are split into small segments and manifests are generated.  
-4. **Store** – Final chunks and manifests live in **origin storage** (e.g., S3).  
+3. **Package & Chunk** – Each rendition is split into small segments (chunks) and manifests are generated.  
+4. **Store** – Final chunks and manifests are saved in **origin storage** (e.g., Amazon S3).  
 5. **Distribute** – A **CDN** caches and serves these chunks to viewers globally.  
-6. **Playback** – User’s video player downloads the **master manifest**, selects a rendition, and adaptively switches quality during playback.
-```
+6. **Playback** – The user’s video player downloads the **master manifest**, selects a rendition, and adaptively switches quality during playback.
+
 
 
