@@ -1,6 +1,6 @@
 # Media Processing & Streaming Primer
 
-A concise, beginner-friendly guide to how online video platforms prepare and deliver media.
+Lets get familar with some media proceessing terminologies.
 
 ---
 
