@@ -49,16 +49,60 @@ The player:
 
 ---
 
-## 4️⃣ Sample Master Manifest (HLS)
+## 4️⃣ Sample Master Manifest (HLS) – With Full URLs
+
+The master manifest lists every available rendition and the **full location** of its variant playlist.
 
 ```m3u8
 #EXTM3U
 #EXT-X-STREAM-INF:BANDWIDTH=600000,RESOLUTION=640x360
-low/playlist.m3u8
+https://cdn.example.com/video123/low/playlist.m3u8
 #EXT-X-STREAM-INF:BANDWIDTH=1000000,RESOLUTION=854x480
-medium/playlist.m3u8
+https://cdn.example.com/video123/medium/playlist.m3u8
 #EXT-X-STREAM-INF:BANDWIDTH=2500000,RESOLUTION=1280x720
-high/playlist.m3u8
+https://cdn.example.com/video123/high/playlist.m3u8
 #EXT-X-STREAM-INF:BANDWIDTH=5000000,RESOLUTION=1920x1080
-fullhd/playlist.m3u8
+https://cdn.example.com/video123/fullhd/playlist.m3u8
+```
+
+## 5️⃣ Detailed Variant Playlist Example – 720p HD Rendition
+
+If the player selects the **720p HD** stream, it downloads the **variant playlist**.  
+This file simply lists each 4-second video chunk with its full CDN URL:
+
+```m3u8
+#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-TARGETDURATION:4
+#EXT-X-MEDIA-SEQUENCE:0
+#EXTINF:4.0,
+https://cdn.example.com/video123/high/segment0.ts
+#EXTINF:4.0,
+https://cdn.example.com/video123/high/segment1.ts
+#EXTINF:4.0,
+https://cdn.example.com/video123/high/segment2.ts
+#EXTINF:4.0,
+https://cdn.example.com/video123/high/segment3.ts
+#EXT-X-ENDLIST
+```
+
+Each segmentN.ts is a ~4-second MPEG-TS chunk of the 720p rendition.
+
+The player downloads these sequentially and can switch to another rendition’s playlist at any time.
+
+---
+
+### **Section 6 – End-to-End Flow**
+
+```markdown
+## 6️⃣ End-to-End Flow
+
+1. **Upload/Ingest** – Creator uploads raw `.mov` or `.mp4` file.  
+2. **Transcode** – Platform creates multiple renditions (different resolutions, bitrates, codecs).  
+3. **Package & Chunk** – Files are split into small segments and manifests are generated.  
+4. **Store** – Final chunks and manifests live in **origin storage** (e.g., S3).  
+5. **Distribute** – A **CDN** caches and serves these chunks to viewers globally.  
+6. **Playback** – User’s video player downloads the **master manifest**, selects a rendition, and adaptively switches quality during playback.
+```
+
 
