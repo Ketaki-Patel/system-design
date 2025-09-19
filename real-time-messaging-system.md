@@ -22,7 +22,7 @@ Lets first start with something simple for understading i.e only one server inst
 
 - The consuming instance stores it in the Notification DB, then publishes to Redis Pub/Sub channel "alerts".
 
-- Every WebSocket Service instance subscribed to "alerts"(Redis Pub) receives the payload, checks the centralized live_sessions keys in Redis datstore to verify if user is online or offline if key is found in Redis datstore user is online if not found user is offline and if websocket service hosts the user’s WebSocketSession locally, it immediately pushes the message down the open WebSocket connection.
+- All websocket instances are subscribed to "alerts"(Redis Pub). Every WebSocket Service instance will receive the payload due to pub/sub fanout settings, checks the centralized live_sessions keys in Redis datstore to verify if user is online or offline if key is found in Redis datstore user is online if not found user is offline and if websocket service hosts the user’s WebSocketSession locally means user has websocket connection open with this host, so service will immediately pushes the message down the open WebSocket connection.
 
 - Online users (e.g., User1, User2) receive messagee instantly; offline users retrieve messages/notificaction from the DB when they reconnect.
 
@@ -153,7 +153,7 @@ we want to build distributed and scalable system.
     - User3 is offline, but the message is already stored in Notification DB for retrieval when they reconnect.
       
 ## Extension to this architecture - Notification Service Platform
-  This architecture real time messagee processing we can easily extend and make it notification service platform by supporting notification delivery channel like
+  We can easily extend this real time message processing and make it notification service platform by supporting notification delivery channel like
   SMS, Email and Push Notificaton as well
 
 <img width="941" height="806" alt="image" src="https://github.com/user-attachments/assets/def4caa0-368e-4f9f-94e2-bbcac6838ba8" />
