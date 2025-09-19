@@ -19,3 +19,8 @@ This document explains the **high-level flow** of media processing—from upload
 
 
 <img width="573" height="800" alt="image" src="https://github.com/user-attachments/assets/5625f909-84e8-4446-b63e-fc28f1c344ee" />
+
+### Media Processing Architecture
+
+<img width="994" height="720" alt="image" src="https://github.com/user-attachments/assets/7ef43ce9-584d-4dab-97ae-f1b665f6acee" />
+
