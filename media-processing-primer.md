@@ -143,6 +143,117 @@ The player downloads these sequentially and can switch to another rendition’s 
 ## Large File upload with presigned URLS
 ## Small File upload directly from backend
 
+## Small File upload directly from backend
+
+Here’s a **complete, minimal Java (Spring Boot) example** showing how to accept a small video file from a client and upload it **directly to Amazon S3 in a single PUT** (no multipart).
+This is the “one-shot” flow you’d use only for **relatively small files** (well under 100 MB; S3 hard-limit is 5 GB).
+
+---
+
+### 1️⃣ Maven Dependency
+
+Add the AWS SDK v2 for S3:
+
+```xml
+<dependency>
+  <groupId>software.amazon.awssdk</groupId>
+  <artifactId>s3</artifactId>
+</dependency>
+```
+
+---
+
+### 2️⃣ `application.yml` (example)
+
+```yaml
+aws:
+  s3:
+    bucket: my-video-bucket
+```
+
+---
+
+### 3️⃣ Spring Boot Controller
+
+```java
+@RestController
+@RequestMapping("/api/upload")
+@RequiredArgsConstructor
+public class VideoUploadController {
+
+    private final S3Client s3Client;       // injected bean
+    @Value("${aws.s3.bucket}")
+    private String bucketName;
+
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> uploadVideo(@RequestParam("file") MultipartFile file) throws IOException {
+
+        // 1. Choose a key (path) inside the bucket
+        String key = "raw-videos/" + UUID.randomUUID() + "-" + file.getOriginalFilename();
+
+        // 2. Build the request
+        PutObjectRequest request = PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key(key)
+                .contentType(file.getContentType())
+                .build();
+
+        // 3. Stream file directly to S3
+        s3Client.putObject(request, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+
+        // 4. Return the S3 object key (or URL) to the client
+        return ResponseEntity.ok("Uploaded to s3://" + bucketName + "/" + key);
+    }
+}
+```
+
+---
+
+### 4️⃣ S3Client Configuration
+
+```java
+@Configuration
+public class S3Config {
+
+    @Bean
+    public S3Client s3Client() {
+        return S3Client.builder()
+                .region(Region.US_EAST_1)      // pick your region
+                .credentialsProvider(DefaultCredentialsProvider.create())
+                .build();
+    }
+}
+```
+
+---
+
+### Flow Summary
+
+1. **Browser/Front-end** sends a standard `multipart/form-data` POST to `/api/upload` with the video file.
+2. **Spring Boot Controller** reads the `MultipartFile` stream and calls:
+
+   ```java
+   s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(...));
+   ```
+3. S3 stores the file as a single object.
+4. The API responds with the S3 key or URL.
+
+---
+
+### When to Use / Avoid
+
+* ✅ Good for small files (profile pictures, short clips).
+* ❌ For large videos (hundreds of MB or GB), this approach:
+
+  * pushes all bytes **through your Spring Boot server** (higher bandwidth/memory load),
+  * cannot resume if the connection drops,
+  * and will require long timeouts.
+
+For large media, **multipart upload with presigned URLs** (the earlier design) is strongly recommended.
+
+
+
+
 ## Large File upload with presigned URLS (lets understand with some code and api)
 
 - **sequenceDiagram**
