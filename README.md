@@ -21,6 +21,7 @@ Stay tuned for the first deep dive!
   
 1. [Real Time Messaging System](https://github.com/Ketaki-Patel/system-design/blob/main/real-time-messaging-system.md)
 2. Notifiction Service plaform
+3. [Distributed Scheduler](https://www.linkedin.com/pulse/system-design-distributed-job-scheduler-keep-simple-stupid-ismail)
    
 
 
