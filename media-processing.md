@@ -50,6 +50,16 @@ Here’s a **comprehensive document** explaining the architecture in your diagra
 
 ---
 
+For large media (abovee 10MB or more), multipart upload with presigned URLs (the earlier design) is strongly recommended.
+
+❌ For large videos (hundreds of MB or GB), direct upload from seveer is not advisable:
+
+pushes all bytes through your Spring Boot server (higher bandwidth/memory load),
+
+cannot resume if the connection drops,
+
+and will require long timeouts.
+
 ## 3️⃣ High-Level Flow
 
 ### Step 1 – Client Upload
