@@ -1,5 +1,5 @@
 
-# Stripe like Payment System
+# Payment System (ex Stripe, paypal, square etc)
 
 <img width="820" height="463" alt="image" src="https://github.com/user-attachments/assets/1e3338bb-78d4-4405-aff0-0fd6d1234737" />
 
