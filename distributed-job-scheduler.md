@@ -10,8 +10,9 @@ This design defines a **scalable, distributed, fault-tolerant job scheduler** wi
 * Observability and status tracking
 * Persistent state using MySQL and queue systems
 
-Ref : https://medium.com/@raxshah/system-design-design-a-distributed-job-scheduler-kiss-interview-series-753107c010  
-note: my design and tables are bit different 
+[Distributed Scheduler Ref doc](https://www.linkedin.com/pulse/system-design-distributed-job-scheduler-keep-simple-stupid-ismail)
+ 
+my db design and apis are bit different from this doc, so it is just for reference
 ---
 
 This is not final architecture diagram needs to be refined
