@@ -145,6 +145,21 @@ WHERE id IN (
 RETURNING *;
 
 COMMIT;
+
+or  you can use following
+
+START TRANSACTION;
+
+UPDATE jobs
+SET status = 'QUEUED',
+    updated_at = NOW()
+WHERE status = 'PENDING'
+ORDER BY created_at
+LIMIT 10
+FOR UPDATE SKIP LOCKED
+RETURNING *;
+
+COMMIT;
 ```
 ✅ Notes:
 
