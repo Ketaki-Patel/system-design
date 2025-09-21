@@ -88,4 +88,7 @@ Merchant → Stripe (Gateway + Processor + More) → Banks
 
 Think of it this way: Payment gateways and processors are like buying separate components, while Stripe is like buying a complete, integrated system.
 
+<img width="812" height="467" alt="image" src="https://github.com/user-attachments/assets/c65e7d84-3e43-462d-b5ea-3eb22546a5f3" />
+
+
 
