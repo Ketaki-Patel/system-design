@@ -255,186 +255,7 @@ Here’s a **ready-to-use Elasticsearch index setup** for your **Yelp-like locat
 
 ---
 
-# 2. **Elasticsearch Index: `places`**
-
-```json
-PUT /places
-{
-  "settings": {
-    "number_of_shards": 1,
-    "number_of_replicas": 0,
-    "analysis": {
-      "filter": {
-        "english_stop": {
-          "type": "stop",
-          "stopwords": "_english_"
-        },
-        "english_stemmer": {
-          "type": "stemmer",
-          "language": "english"
-        },
-        "synonym_filter": {
-          "type": "synonym",
-          "synonyms": [
-            "cafe, coffee shop",
-            "restaurant, diner",
-            "pizza, pizzeria"
-          ]
-        }
-      },
-      "analyzer": {
-        "custom_text_analyzer": {
-          "type": "custom",
-          "tokenizer": "standard",
-          "filter": [
-            "lowercase",
-            "english_stop",
-            "english_stemmer",
-            "synonym_filter"
-          ]
-        }
-      }
-    }
-  },
-  "mappings": {
-    "properties": {
-      "id": { "type": "long" },
-      "name": { "type": "text", "analyzer": "custom_text_analyzer" },
-      "category": { "type": "keyword" },
-      "description": { "type": "text", "analyzer": "custom_text_analyzer" },
-      "location": { "type": "geo_point" },
-      "rating": { "type": "float" },
-      "suggest": { "type": "completion" }
-    }
-  }
-}
-```
-
----
-
-## **Explanation of Fields**
-
-| Field         | Type       | Purpose                                                    |
-| ------------- | ---------- | ---------------------------------------------------------- |
-| `id`          | long       | Unique place ID                                            |
-| `name`        | text       | Full-text searchable (with stemming, stop words, synonyms) |
-| `category`    | keyword    | Exact match filtering (e.g., cafe, restaurant)             |
-| `description` | text       | Searchable description field                               |
-| `location`    | geo\_point | Latitude/Longitude for geo queries                         |
-| `rating`      | float      | Can be used for sorting or filtering                       |
-| `suggest`     | completion | Autocomplete suggestions for frontend                      |
-
----
-
-## **Example: Adding a Place**
-
-```json
-POST /places/_doc/1
-{
-  "id": 1,
-  "name": "Central Cafe",
-  "category": "cafe",
-  "description": "A cozy coffee shop with great espresso and pastries",
-  "location": { "lat": 37.7749, "lon": -122.4194 },
-  "rating": 4.5,
-  "suggest": { "input": ["Central Cafe", "Cafe Central"] }
-}
-```
-
----
-
-## **Example: Fuzzy Search**
-
-```json
-GET /places/_search
-{
-  "query": {
-    "match": {
-      "name": {
-        "query": "centrall cafe",
-        "fuzziness": "AUTO"
-      }
-    }
-  }
-}
-```
-
-* Will match `"Central Cafe"` even with typos.
-
----
-
-## **Example: Geo + Text Search**
-
-```json
-GET /places/_search
-{
-  "query": {
-    "bool": {
-      "must": {
-        "match": { "description": { "query": "coffee shop", "fuzziness": "AUTO" } }
-      },
-      "filter": {
-        "geo_distance": {
-          "distance": "5km",
-          "location": { "lat": 37.7749, "lon": -122.4194 }
-        }
-      }
-    }
-  },
-  "sort": [
-    {
-      "_geo_distance": {
-        "location": { "lat": 37.7749, "lon": -122.4194 },
-        "order": "asc",
-        "unit": "km"
-      }
-    }
-  ]
-}
-```
-
----
-
-## **Example: Autocomplete / Suggest**
-
-```json
-POST /places/_search
-{
-  "suggest": {
-    "place-suggest": {
-      "prefix": "cen",
-      "completion": {
-        "field": "suggest",
-        "skip_duplicates": true,
-        "size": 5
-      }
-    }
-  }
-}
-```
-
-* Typing `"cen"` will suggest `"Central Cafe"`
-* Works well for frontend search bars
-
----
-
-✅ **This index covers everything you need for a Yelp-like service:**
-
-* Full-text search with **stemming & stop words**
-* **Synonym handling**
-* **Fuzzy search** for typos
-* **Wildcard/prefix search** capability
-* **Geo-point search** for nearby places
-* **Autocomplete / suggest** for search bars
-
----
-
-
- Here’s a **complete setup document** for your local development environment for a Yelp-like location-based service using **Docker Compose**. This includes **Docker setup**, **service configurations**, and **README instructions for mysql, elastic search and redis set up **.
-
----
-
-# 3. **Yelp-Clone Local Development Setup**
+# 2. **Yelp-Clone(yelp like app) Local Development Setup**
 
 ## **1. Project Folder Structure**
 
@@ -616,5 +437,340 @@ If you want, I can **write the MySQL + Elasticsearch schema setup** and provide 
 
 Do you want me to do that next?
 ```
+
+Here’s an **expanded MySQL schema** for a Yelp-like project, now with **two optional tables** plus **seed data (3 rows each)** so you can spin it up and test immediately.
+
+---
+
+# 3. **Expanded MySQL schema**
+- 1️⃣ Core Tables
+
+### `users`
+
+```sql
+CREATE TABLE users (
+    id             BIGINT AUTO_INCREMENT PRIMARY KEY,
+    username       VARCHAR(50)  NOT NULL UNIQUE,
+    email          VARCHAR(100) NOT NULL UNIQUE,
+    password_hash  VARCHAR(255) NOT NULL,
+    created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+```
+
+### `places`
+
+```sql
+CREATE TABLE places (
+    id           BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name         VARCHAR(150) NOT NULL,
+    category     VARCHAR(50)  NOT NULL,
+    address      VARCHAR(255),
+    city         VARCHAR(100),
+    state        VARCHAR(100),
+    country      VARCHAR(100),
+    latitude     DECIMAL(10,7) NOT NULL,
+    longitude    DECIMAL(10,7) NOT NULL,
+    avg_rating   DECIMAL(2,1)  DEFAULT 0.0,
+    created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+```
+
+### `reviews`
+
+```sql
+CREATE TABLE reviews (
+    id         BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id    BIGINT NOT NULL,
+    place_id   BIGINT NOT NULL,
+    rating     TINYINT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    comment    TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id)  REFERENCES users(id)  ON DELETE CASCADE,
+    FOREIGN KEY (place_id) REFERENCES places(id) ON DELETE CASCADE
+);
+```
+
+---
+
+## 2️⃣ Optional Supporting Tables
+
+### `categories`
+
+Normalized list of categories to avoid duplicates in `places.category`.
+
+```sql
+CREATE TABLE categories (
+    id        BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name      VARCHAR(100) NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### `place_photos`
+
+Holds URLs of images for each place.
+
+```sql
+CREATE TABLE place_photos (
+    id        BIGINT AUTO_INCREMENT PRIMARY KEY,
+    place_id  BIGINT NOT NULL,
+    photo_url VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (place_id) REFERENCES places(id) ON DELETE CASCADE
+);
+```
+
+---
+
+## 3️⃣ Seed Data (Insert 3 Rows per Table)
+
+### Users
+
+```sql
+INSERT INTO users (username, email, password_hash) VALUES
+('alice', 'alice@example.com', 'hash_alice'),
+('bob',   'bob@example.com',   'hash_bob'),
+('carol', 'carol@example.com', 'hash_carol');
+```
+
+### Categories
+
+```sql
+INSERT INTO categories (name) VALUES
+('Cafe'),
+('Restaurant'),
+('Bakery');
+```
+
+### Places
+
+```sql
+INSERT INTO places (name, category, address, city, state, country, latitude, longitude, avg_rating)
+VALUES
+('Central Cafe',  'Cafe',  '123 Market St',   'San Francisco', 'CA', 'USA', 37.7749, -122.4194, 4.5),
+('Golden Gate Pizza','Restaurant','456 Bay St','San Francisco', 'CA', 'USA', 37.8050, -122.4200, 4.7),
+('Sweet Tooth Bakery','Bakery','789 Mission St','San Francisco','CA','USA',37.7830, -122.4090, 4.3);
+```
+
+### Reviews
+
+```sql
+INSERT INTO reviews (user_id, place_id, rating, comment) VALUES
+(1, 1, 5, 'Amazing coffee and atmosphere!'),
+(2, 2, 4, 'Great pizza, slightly long wait times.'),
+(3, 3, 5, 'Delicious pastries and friendly staff.');
+```
+
+### Place Photos
+
+```sql
+INSERT INTO place_photos (place_id, photo_url) VALUES
+(1, 'https://example.com/photos/central-cafe-1.jpg'),
+(2, 'https://example.com/photos/golden-gate-pizza-1.jpg'),
+(3, 'https://example.com/photos/sweet-tooth-bakery-1.jpg');
+```
+
+---
+
+### ✅ How to Use
+
+1. Save all the `CREATE TABLE` statements into a file (e.g., `schema.sql`) and run:
+
+   ```bash
+   mysql -u root -p yelp_clone < schema.sql
+   ```
+2. Save the `INSERT` statements into `seed.sql` and run:
+
+   ```bash
+   mysql -u root -p yelp_clone < seed.sql
+   ```
+
+This gives you a **fully populated local MySQL database** with:
+
+* **Users** ready for authentication
+* **Places** linked to **categories**, **photos**, and **reviews**
+* Clean relationships for syncing to Elasticsearch.
+
+# 4. **Elasticsearch Index: `places`**
+
+```json
+PUT /places
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0,
+    "analysis": {
+      "filter": {
+        "english_stop": {
+          "type": "stop",
+          "stopwords": "_english_"
+        },
+        "english_stemmer": {
+          "type": "stemmer",
+          "language": "english"
+        },
+        "synonym_filter": {
+          "type": "synonym",
+          "synonyms": [
+            "cafe, coffee shop",
+            "restaurant, diner",
+            "pizza, pizzeria"
+          ]
+        }
+      },
+      "analyzer": {
+        "custom_text_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase",
+            "english_stop",
+            "english_stemmer",
+            "synonym_filter"
+          ]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "id": { "type": "long" },
+      "name": { "type": "text", "analyzer": "custom_text_analyzer" },
+      "category": { "type": "keyword" },
+      "description": { "type": "text", "analyzer": "custom_text_analyzer" },
+      "location": { "type": "geo_point" },
+      "rating": { "type": "float" },
+      "suggest": { "type": "completion" }
+    }
+  }
+}
+```
+
+---
+
+## **Explanation of Fields**
+
+| Field         | Type       | Purpose                                                    |
+| ------------- | ---------- | ---------------------------------------------------------- |
+| `id`          | long       | Unique place ID                                            |
+| `name`        | text       | Full-text searchable (with stemming, stop words, synonyms) |
+| `category`    | keyword    | Exact match filtering (e.g., cafe, restaurant)             |
+| `description` | text       | Searchable description field                               |
+| `location`    | geo\_point | Latitude/Longitude for geo queries                         |
+| `rating`      | float      | Can be used for sorting or filtering                       |
+| `suggest`     | completion | Autocomplete suggestions for frontend                      |
+
+---
+
+## **Example: Adding a Place**
+
+```json
+POST /places/_doc/1
+{
+  "id": 1,
+  "name": "Central Cafe",
+  "category": "cafe",
+  "description": "A cozy coffee shop with great espresso and pastries",
+  "location": { "lat": 37.7749, "lon": -122.4194 },
+  "rating": 4.5,
+  "suggest": { "input": ["Central Cafe", "Cafe Central"] }
+}
+```
+
+---
+
+## **Example: Fuzzy Search**
+
+```json
+GET /places/_search
+{
+  "query": {
+    "match": {
+      "name": {
+        "query": "centrall cafe",
+        "fuzziness": "AUTO"
+      }
+    }
+  }
+}
+```
+
+* Will match `"Central Cafe"` even with typos.
+
+---
+
+## **Example: Geo + Text Search**
+
+```json
+GET /places/_search
+{
+  "query": {
+    "bool": {
+      "must": {
+        "match": { "description": { "query": "coffee shop", "fuzziness": "AUTO" } }
+      },
+      "filter": {
+        "geo_distance": {
+          "distance": "5km",
+          "location": { "lat": 37.7749, "lon": -122.4194 }
+        }
+      }
+    }
+  },
+  "sort": [
+    {
+      "_geo_distance": {
+        "location": { "lat": 37.7749, "lon": -122.4194 },
+        "order": "asc",
+        "unit": "km"
+      }
+    }
+  ]
+}
+```
+
+---
+
+## **Example: Autocomplete / Suggest**
+
+```json
+POST /places/_search
+{
+  "suggest": {
+    "place-suggest": {
+      "prefix": "cen",
+      "completion": {
+        "field": "suggest",
+        "skip_duplicates": true,
+        "size": 5
+      }
+    }
+  }
+}
+```
+
+* Typing `"cen"` will suggest `"Central Cafe"`
+* Works well for frontend search bars
+
+---
+
+✅ **This index covers everything you need for a Yelp-like service:**
+
+* Full-text search with **stemming & stop words**
+* **Synonym handling**
+* **Fuzzy search** for typos
+* **Wildcard/prefix search** capability
+* **Geo-point search** for nearby places
+* **Autocomplete / suggest** for search bars
+
+---
+
+
+ Here’s a **complete setup document** for your local development environment for a Yelp-like location-based service using **Docker Compose**. This includes **Docker setup**, **service configurations**, and **README instructions for mysql, elastic search and redis set up **.
+
+---
+
 
 
