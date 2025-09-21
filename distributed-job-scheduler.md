@@ -119,7 +119,8 @@ VALUES
 
 ---
 
-## 🔁 Polling with Safe Locking (Multi-Instance)
+## 🔁 Polling with Safe Locking (Multi-Instance) (part of Scheduler Service)
+
 
 To avoid job contention across schedulers:
 
@@ -142,7 +143,7 @@ COMMIT;
 
 ---
 
-## 📤 Job Execution with Retry Logic
+## 📤 Job Execution with Retry Logic (part of Job Executor)
 
 ### Executor Steps:
 
