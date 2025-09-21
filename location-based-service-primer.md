@@ -2,7 +2,7 @@ Let’s create a **concise Elasticsearch feature refresh ** that covers everythi
 
 ---
 
-# **Elasticsearch Primer: Full-Text & Location Search**
+# 1. **Elasticsearch Primer: Full-Text & Location Search**
 
 ## **1. Elasticsearch Basics**
 
@@ -255,7 +255,7 @@ Here’s a **ready-to-use Elasticsearch index setup** for your **Yelp-like locat
 
 ---
 
-# **Elasticsearch Index: `places`**
+# 2. **Elasticsearch Index: `places`**
 
 ```json
 PUT /places
@@ -434,7 +434,7 @@ POST /places/_search
 
 ---
 
-# **Yelp-Clone Local Development Setup**
+# 3. **Yelp-Clone Local Development Setup**
 
 ## **1. Project Folder Structure**
 
