@@ -1,15 +1,4 @@
 
-This is not final architecture diagram needs to be refined
-<img width="661" height="564" alt="image" src="https://github.com/user-attachments/assets/1a77585a-f1f0-4aaf-a0fd-0a85cf84ba54" />
-
-Support for:
-
-* Job retries
-* Executor/node failure handling
-* A new `job_executions` table to track execution attempts, retries, and timestamps
-
----
-
 ## 🧭 Overview
 
 This design defines a **scalable, distributed, fault-tolerant job scheduler** with support for:
@@ -20,6 +9,19 @@ This design defines a **scalable, distributed, fault-tolerant job scheduler** wi
 * Safe coordination across multiple instances
 * Observability and status tracking
 * Persistent state using MySQL and queue systems
+
+Ref : https://medium.com/@raxshah/system-design-design-a-distributed-job-scheduler-kiss-interview-series-753107c010  
+note: my design and tables are bit different 
+---
+
+This is not final architecture diagram needs to be refined
+<img width="661" height="564" alt="image" src="https://github.com/user-attachments/assets/1a77585a-f1f0-4aaf-a0fd-0a85cf84ba54" />
+
+Support for:
+
+* Job retries
+* Executor/node failure handling
+* A new `job_executions` table to track execution attempts, retries, and timestamps
 
 ---
 
