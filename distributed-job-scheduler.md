@@ -2,15 +2,11 @@
 This is not final architecture diagram needs to be refined
 <img width="661" height="564" alt="image" src="https://github.com/user-attachments/assets/1a77585a-f1f0-4aaf-a0fd-0a85cf84ba54" />
 
-➕ Support for:
+Support for:
 
 * Job retries
 * Executor/node failure handling
 * A new `job_executions` table to track execution attempts, retries, and timestamps
-
----
-
-# 📄 Distributed Job Scheduler – Full Design Document (MySQL, Scalable, Retry, Resilience)
 
 ---
 
