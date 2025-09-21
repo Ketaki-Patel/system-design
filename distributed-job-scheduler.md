@@ -15,7 +15,10 @@ This design defines a **scalable, distributed, fault-tolerant job scheduler** wi
 my db design and apis are bit different from this doc, so it is just for reference
 ---
 
-This is not final architecture diagram needs to be refined
+<img width="559" height="316" alt="image" src="https://github.com/user-attachments/assets/baf25bfd-8063-48ff-9936-fb6fb559842e" />
+
+
+work in progress for this diagram
 <img width="661" height="564" alt="image" src="https://github.com/user-attachments/assets/1a77585a-f1f0-4aaf-a0fd-0a85cf84ba54" />
 
 Support for:
