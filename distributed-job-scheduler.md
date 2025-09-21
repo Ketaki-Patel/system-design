@@ -131,19 +131,31 @@ To avoid job contention across schedulers:
 ```sql
 START TRANSACTION;
 
-SELECT * FROM jobs
-WHERE status = 'PENDING'
-ORDER BY created_at
-LIMIT 10
-FOR UPDATE SKIP LOCKED;
-
--- For each row:
 UPDATE jobs
-SET status = 'QUEUED'
-WHERE id = ?;
+SET status = 'QUEUED',
+    updated_at = NOW()
+WHERE id IN (
+    SELECT id
+    FROM jobs
+    WHERE status = 'PENDING'
+    ORDER BY created_at
+    LIMIT 10
+    FOR UPDATE SKIP LOCKED
+)
+RETURNING *;
 
 COMMIT;
 ```
+✅ Notes:
+
+RETURNING * will return all columns of the updated rows.
+
+Using FOR UPDATE SKIP LOCKED ensures multiple scheduler instances don’t pick the same jobs.
+
+Atomicity is maintained with START TRANSACTION + COMMIT.
+
+This is fully compatible with MySQL 8.0.27+.
+This is now a single querry that updates and returns the affecteed rows-perfect for sending jobs directly to executors.
 
 ---
 
