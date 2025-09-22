@@ -18,7 +18,16 @@ Stay tuned for the first deep dive!
 
 
 <img width="890" height="762" alt="image" src="https://github.com/user-attachments/assets/16c62b9b-dfc5-42ec-97aa-beea76b05e11" />
-  
+
+## System Design Concepts and Tools
+
+1. [Kafka in 10 minutes](https://rockybhatia.substack.com/p/learn-kafka-in-10-mins-443)
+2. [Mastering System Design](https://rockybhatia.substack.com/p/mastering-system-design-the-ultimate)
+3. [Choosing your database](https://rockybhatia.substack.com/p/choosing-your-database-what-every-4eb)
+4. [Common system Deign prolem and solutions](https://rockybhatia.substack.com/p/8-common-system-design-problems-and-ad90)
+5. 
+
+## System Design  
 1. [Real Time Messaging System](https://github.com/Ketaki-Patel/system-design/blob/main/real-time-messaging-system.md)
 2. Notifiction Service plaform
 3. [Distributed Scheduler](https://github.com/Ketaki-Patel/system-design/blob/main/distributed-job-scheduler.md)
