@@ -21,11 +21,15 @@ Stay tuned for the first deep dive!
 
 ## System Design Concepts and Tools
 
+By Rahul Bhatia
 1. [Kafka in 10 minutes](https://rockybhatia.substack.com/p/learn-kafka-in-10-mins-443)
 2. [Mastering System Design](https://rockybhatia.substack.com/p/mastering-system-design-the-ultimate)
 3. [Choosing your database](https://rockybhatia.substack.com/p/choosing-your-database-what-every-4eb)
 4. [Common system Deign prolem and solutions](https://rockybhatia.substack.com/p/8-common-system-design-problems-and-ad90)
-5. 
+5. [SSD template](https://drive.google.com/file/d/15FRd7Mairk4GUXLxjeYZy41X9DJc2kYG/view)
+
+Misc
+
 
 ## System Design  
 1. [Real Time Messaging System](https://github.com/Ketaki-Patel/system-design/blob/main/real-time-messaging-system.md)
