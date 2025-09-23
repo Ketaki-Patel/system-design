@@ -268,6 +268,290 @@ GET    /api/v1/users/{userId}        # Get user details (admin)
 PUT    /api/v1/users/{userId}/role   # Update user role (admin)
 ```
 
+Below is a GitHub-flavored Markdown (GFM) document you can drop directly into a README.md.
+It groups the APIs by service and includes **sample request bodies** and **sample JSON responses with example values** so it’s easy to copy/paste into docs or test tools like Postman.
+
+````markdown
+# Hotel Booking Platform – REST API Reference
+
+All endpoints are prefixed with:  
+`https://api.example.com/api/v1/`
+
+---
+
+## 6.1 Hotel Service APIs
+
+### Create New Hotel
+`POST /hotels`
+
+**Request**
+```json
+{
+  "name": "Sunset Resort",
+  "ownerId": "own_12345",
+  "city": "San Diego",
+  "address": "123 Ocean Drive",
+  "description": "Beachfront hotel with pool and spa"
+}
+````
+
+**Response**
+
+```json
+{
+  "hotelId": "hot_98765",
+  "name": "Sunset Resort",
+  "ownerId": "own_12345",
+  "city": "San Diego",
+  "address": "123 Ocean Drive",
+  "description": "Beachfront hotel with pool and spa",
+  "createdAt": "2025-09-22T17:00:00Z"
+}
+```
+
+### Get Hotel Details
+
+`GET /hotels/{hotelId}`
+
+**Response**
+
+```json
+{
+  "hotelId": "hot_98765",
+  "name": "Sunset Resort",
+  "ownerId": "own_12345",
+  "city": "San Diego",
+  "address": "123 Ocean Drive",
+  "description": "Beachfront hotel with pool and spa",
+  "rating": 4.6
+}
+```
+
+### Update / Delete Hotel
+
+`PUT /hotels/{hotelId}` and `DELETE /hotels/{hotelId}`
+Request body for update is identical to **Create New Hotel**.
+
+### Get Hotels by Owner
+
+`GET /hotels/owner/{ownerId}` → Returns a JSON array of hotel objects.
+
+---
+
+### Room Types
+
+**Add Room Type**
+`POST /hotels/{hotelId}/room-types`
+
+```json
+{
+  "name": "Deluxe Suite",
+  "capacity": 4,
+  "basePrice": 220.0
+}
+```
+
+**Get Room Types**
+`GET /hotels/{hotelId}/room-types`
+
+**Update / Delete Room Type**
+`PUT /room-types/{roomTypeId}` / `DELETE /room-types/{roomTypeId}`
+
+---
+
+## 6.2 Room & Booking Service APIs
+
+### Check Availability
+
+`GET /hotels/{hotelId}/availability?start=2025-10-01&end=2025-10-05`
+
+**Response**
+
+```json
+{
+  "hotelId": "hot_98765",
+  "availableRooms": [
+    {
+      "roomTypeId": "rt_11",
+      "type": "Deluxe Suite",
+      "available": 3
+    }
+  ]
+}
+```
+
+### Update Inventory (Owner)
+
+`POST /room-inventory`
+
+```json
+{
+  "roomTypeId": "rt_11",
+  "date": "2025-10-01",
+  "available": 5
+}
+```
+
+### Get Room-Type Calendar
+
+`GET /room-types/{roomTypeId}/calendar?month=2025-10`
+
+---
+
+### Bookings
+
+**Create Booking**
+`POST /bookings`
+
+```json
+{
+  "hotelId": "hot_98765",
+  "roomTypeId": "rt_11",
+  "userId": "usr_555",
+  "checkIn": "2025-10-02",
+  "checkOut": "2025-10-05",
+  "guests": 2
+}
+```
+
+**Response**
+
+```json
+{
+  "bookingId": "bk_20250922",
+  "status": "CONFIRMED",
+  "totalPrice": 660.00,
+  "currency": "USD",
+  "createdAt": "2025-09-22T17:10:00Z"
+}
+```
+
+**Other Booking Endpoints**
+
+* `GET /bookings/{bookingId}`
+* `PUT /bookings/{bookingId}/cancel`
+* `GET /users/{userId}/bookings`
+* `GET /hotels/{hotelId}/bookings`
+
+---
+
+### Payments
+
+* `POST /payments/stripe`
+* `POST /payments/plaid`
+* `GET /payments/{transactionId}`
+
+**Sample Stripe Payment Request**
+
+```json
+{
+  "bookingId": "bk_20250922",
+  "token": "tok_visa"
+}
+```
+
+**Response**
+
+```json
+{
+  "transactionId": "txn_77777",
+  "status": "SUCCESS",
+  "amount": 660.00,
+  "currency": "USD"
+}
+```
+
+---
+
+## 6.3 Review Service APIs
+
+* `POST /reviews`
+* `GET /hotels/{hotelId}/reviews`
+* `GET /reviews/{reviewId}`
+* `PUT /reviews/{reviewId}`
+* `DELETE /reviews/{reviewId}`
+* `GET /users/{userId}/reviews`
+* `GET /hotels/{hotelId}/rating-summary`
+
+**Create Review Example**
+
+```json
+{
+  "hotelId": "hot_98765",
+  "userId": "usr_555",
+  "rating": 5,
+  "comment": "Fantastic stay and friendly staff!"
+}
+```
+
+---
+
+## 6.4 Hotel Search Service APIs
+
+* `GET /search/hotels?city=San%20Diego`
+* `GET /search/hotels/{hotelId}/summary`
+* `POST /search/filters`
+* `GET /search/suggestions?query=Sun`
+
+**Advanced Search Request**
+
+```json
+{
+  "city": "San Diego",
+  "priceRange": [100, 300],
+  "minRating": 4
+}
+```
+
+---
+
+## 6.5 User Auth Service APIs
+
+* `POST /auth/register`
+* `POST /auth/login`
+* `POST /auth/logout`
+* `POST /auth/refresh`
+* `POST /auth/forgot-password`
+* `POST /auth/reset-password`
+
+**Registration Request**
+
+```json
+{
+  "email": "jane@example.com",
+  "password": "StrongPass!23",
+  "name": "Jane Doe"
+}
+```
+
+**Response**
+
+```json
+{
+  "userId": "usr_555",
+  "email": "jane@example.com",
+  "token": "jwt_token_here"
+}
+```
+
+### User Profile
+
+* `GET /users/profile`
+* `PUT /users/profile`
+* `GET /users/{userId}`  *(admin)*
+* `PUT /users/{userId}/role`  *(admin)*
+
+---
+
+> **Note:** All timestamps are in ISO-8601 UTC format.
+> Authentication for most endpoints is via Bearer JWT in the `Authorization` header.
+
+```
+
+Copy everything between the triple back-ticks into your `README.md` and GitHub will render it with syntax highlighting and code blocks ready to use.
+```
+
+
 ## 7. Event & Messaging Design
 ```
 Kafka Topics
