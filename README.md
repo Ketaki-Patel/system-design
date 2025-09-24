@@ -35,6 +35,13 @@ Misc
 1. [Real Time Messaging System](https://github.com/Ketaki-Patel/system-design/blob/main/real-time-messaging-system.md)
 2. Notifiction Service plaform
 3. [Distributed Scheduler](https://github.com/Ketaki-Patel/system-design/blob/main/distributed-job-scheduler.md)
+
+## In progress
+1. Recommendation Engine
+2. Event Driven Messaging System like kafka
+3. Hotel Booking System
+4. Ticket Booking System
+5. Location search 
    
 
 
