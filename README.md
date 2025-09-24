@@ -41,7 +41,10 @@ Misc
 2. Event Driven Messaging System like kafka
 3. Hotel Booking System
 4. Ticket Booking System
-5. Location search 
+5. Location search
+6. Payment Based
+7. Media Processing
+   
    
 
 
