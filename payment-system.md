@@ -345,6 +345,7 @@ Customer        Merchant           Stripe                Bank
    |<-- Notify CB ---|                    |                    |
 ```
 
+```
 ### ✅ Role Summary:
 
 * **Customer (User)**: Makes the purchase with card.
@@ -357,12 +358,9 @@ Customer        Merchant           Stripe                Bank
 
   * **Issuer**: Customer’s bank (auths/declines transactions).
   * **Acquirer**: Merchant’s bank (receives captured funds).
-
----
-
-
 ```
-```
+## adding more
+
 
 
 
