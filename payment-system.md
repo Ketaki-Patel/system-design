@@ -359,7 +359,289 @@ Customer        Merchant           Stripe                Bank
   * **Issuer**: Customer’s bank (auths/declines transactions).
   * **Acquirer**: Merchant’s bank (receives captured funds).
 ```
-## adding more
+# sample java code reprensting 
+* Auth
+* Capture
+* Refund
+* Chargeback
+* In-memory DB or JPA-ready
+* RESTful API endpoints
+
+---
+
+> 🧩 **Tech Assumptions**:
+
+* Using Spring Boot (`@RestController`, `@Service`, `@Repository`)
+* Using H2 / JPA for persistence (can be swapped with PostgreSQL or MySQL)
+* Focused on clarity, not production-ready security/error handling
+
+---
+
+### 📦 Folder Structure
+
+```
+com.example.payment
+│
+├── controller
+│   └── PaymentController.java
+├── model
+│   └── Payment.java
+├── repository
+│   └── PaymentRepository.java
+├── service
+│   └── PaymentService.java
+└── PaymentApplication.java
+```
+
+---
+
+## 📁 `Payment.java` (Model)
+
+```java
+package com.example.payment.model;
+
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Entity
+public class Payment {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private Integer userId;
+    private Integer orderId;
+    private BigDecimal amount;
+    private String currency;
+    private String status; // pending, authorized, captured, refunded, chargeback
+
+    private String authId;
+    private String captureId;
+    private String refundId;
+    private String chargebackId;
+
+    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime updatedAt = LocalDateTime.now();
+
+    // Getters and setters
+    // (Can be generated with Lombok @Data in real projects)
+}
+```
+
+---
+
+## 📁 `PaymentRepository.java`
+
+```java
+package com.example.payment.repository;
+
+import com.example.payment.model.Payment;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface PaymentRepository extends JpaRepository<Payment, Long> {
+}
+```
+
+---
+
+## 📁 `PaymentService.java`
+
+```java
+package com.example.payment.service;
+
+import com.example.payment.model.Payment;
+import com.example.payment.repository.PaymentRepository;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.Optional;
+import java.util.UUID;
+
+@Service
+public class PaymentService {
+
+    private final PaymentRepository repo;
+
+    public PaymentService(PaymentRepository repo) {
+        this.repo = repo;
+    }
+
+    public Payment authorize(Payment input) {
+        input.setStatus("authorized");
+        input.setAuthId("auth_" + UUID.randomUUID());
+        return repo.save(input);
+    }
+
+    public Payment capture(Long paymentId, BigDecimal amount) {
+        Payment payment = repo.findById(paymentId).orElseThrow();
+        payment.setStatus("captured");
+        payment.setCaptureId("cap_" + UUID.randomUUID());
+        payment.setUpdatedAt(java.time.LocalDateTime.now());
+        return repo.save(payment);
+    }
+
+    public Payment refund(Long paymentId, BigDecimal amount) {
+        Payment payment = repo.findById(paymentId).orElseThrow();
+        payment.setStatus("refunded");
+        payment.setRefundId("refund_" + UUID.randomUUID());
+        payment.setUpdatedAt(java.time.LocalDateTime.now());
+        return repo.save(payment);
+    }
+
+    public Payment handleChargeback(Long paymentId, String reason) {
+        Payment payment = repo.findById(paymentId).orElseThrow();
+        payment.setStatus("chargeback");
+        payment.setChargebackId("cb_" + UUID.randomUUID());
+        payment.setUpdatedAt(java.time.LocalDateTime.now());
+        return repo.save(payment);
+    }
+}
+```
+
+---
+
+## 📁 `PaymentController.java`
+
+```java
+package com.example.payment.controller;
+
+import com.example.payment.model.Payment;
+import com.example.payment.service.PaymentService;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/payments")
+public class PaymentController {
+
+    private final PaymentService service;
+
+    public PaymentController(PaymentService service) {
+        this.service = service;
+    }
+
+    @PostMapping
+    public Payment authorizePayment(@RequestBody Payment payment) {
+        return service.authorize(payment);
+    }
+
+    @PostMapping("/{paymentId}/capture")
+    public Payment capturePayment(@PathVariable Long paymentId, @RequestBody Map<String, Object> body) {
+        BigDecimal amount = new BigDecimal(body.get("amount").toString());
+        return service.capture(paymentId, amount);
+    }
+
+    @PostMapping("/{paymentId}/refund")
+    public Payment refundPayment(@PathVariable Long paymentId, @RequestBody Map<String, Object> body) {
+        BigDecimal amount = new BigDecimal(body.get("amount").toString());
+        return service.refund(paymentId, amount);
+    }
+
+    @PostMapping("/webhooks/chargeback")
+    public Payment handleChargeback(@RequestBody Map<String, Object> body) {
+        Long paymentId = Long.parseLong(body.get("payment_id").toString());
+        String reason = body.get("reason").toString();
+        return service.handleChargeback(paymentId, reason);
+    }
+}
+```
+
+---
+
+## 📁 `PaymentApplication.java`
+
+```java
+package com.example.payment;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class PaymentApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(PaymentApplication.class, args);
+    }
+}
+```
+
+---
+
+## ✅ Sample cURL Requests
+
+```bash
+# Authorize
+curl -X POST http://localhost:8080/payments -H "Content-Type: application/json" -d '{
+  "userId": 1,
+  "orderId": 101,
+  "amount": 100.00,
+  "currency": "USD"
+}'
+
+# Capture
+curl -X POST http://localhost:8080/payments/1/capture -H "Content-Type: application/json" -d '{
+  "amount": 100.00
+}'
+
+# Refund
+curl -X POST http://localhost:8080/payments/1/refund -H "Content-Type: application/json" -d '{
+  "amount": 100.00
+}'
+
+# Chargeback
+curl -X POST http://localhost:8080/payments/webhooks/chargeback -H "Content-Type: application/json" -d '{
+  "payment_id": 1,
+  "reason": "fraudulent"
+}'
+```
+
+
+---
+
+###  **pom.xml**
+
+```xml
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                        http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.example.payment</groupId>
+    <artifactId>payment-system</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>Payment System</name>
+    <description>Basic Payment System Design</description>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+    </properties>
+
+    <dependencies>
+        <!-- Add dependencies as needed -->
+    </dependencies>
+
+</project>
+```
+
+---
+
+## 🧠 Next Steps (Optional Enhancements)
+
+* Add validation and exception handling
+* Use DTOs instead of raw entity binding
+* Add API auth (JWT)
+* Add database migration (Flyway)
+* Deploy to cloud or containerize (Docker)
+
+
+
 
 
 
