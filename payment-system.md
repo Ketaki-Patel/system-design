@@ -138,9 +138,19 @@ Think of it this way: Payment gateways and processors are like buying separate c
 - Status: `refunded`
 
 ### Chargeback
-- Customer disputes transaction via their bank.
-- Funds withdrawn from merchant and put on hold.
-- Status: `chargeback`
+* A **chargeback** happens when a customer disputes a transaction with their bank.
+* The bank temporarily **withdraws** the disputed funds from the merchant’s account and **puts them on hold**.
+* During this process, the payment status changes to **`chargeback`**.
+* The merchant is notified and can **respond with evidence** to dispute the chargeback.
+
+---
+
+## Chargeback Resolution and Payment Status
+
+| Resolution Outcome       | Payment Status After Resolution          | Description                                                   |
+| ------------------------ | ---------------------------------------- | ------------------------------------------------------------- |
+| **In favor of Customer** | `chargeback` (or `chargeback_finalized`) | Merchant loses the disputed amount; customer keeps the money. |
+| **In favor of Merchant** | `captured`                               | Chargeback reversed; merchant retains funds.                  |
 
 ---
 
