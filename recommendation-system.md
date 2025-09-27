@@ -1,4 +1,4 @@
-Absolutely! Here's your full **RecoMind system design** for a YouTube-style short video recommendation system — written in **GitHub-flavored Markdown** so you can copy-paste it directly into a `README.md` or GitHub wiki.
+ **RecoMind system design** for a YouTube-style short video recommendation system 
 
 ---
 
