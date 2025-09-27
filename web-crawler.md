@@ -4,6 +4,63 @@
 
 A simple web crawler that fetches web pages, extracts links, and stores the data for further analysis (e.g., indexing or data mining). 
 
+Certainly! Here's a **clean, concise, and well-structured** rewrite of your explanation:
+
+---
+
+### 🌐 What Is a Web Crawler?
+
+A **web crawler** (also known as a **spider** or **web robot**) is a program that automatically browses the internet to collect data from web pages.
+
+---
+
+### 🛠️ What It Does:
+
+1. Starts with a list of **seed URLs**.
+2. Visits each URL, downloads the page’s **HTML**, and extracts content such as:
+
+   * Text
+   * Metadata
+   * Links
+3. Adds new links it discovers to the list of URLs to visit.
+4. Repeats the process until a limit is reached or all targets are crawled.
+
+---
+
+### 👨‍💻 Who Creates Web Crawlers?
+
+* **Search engines** (e.g., Google, Bing)
+  → To index websites and keep search results up to date.
+
+* **Companies**
+  → For use cases like **price tracking**, **market research**, or **news monitoring**.
+
+* **Researchers & developers**
+  → For SEO audits, academic studies, or personal projects.
+
+---
+
+### 🧑‍💻 Can Anyone Build One?
+
+Yes. Anyone with programming skills can build a crawler using tools and languages like:
+
+* **Python** (`Scrapy`, `BeautifulSoup`)
+* **Java** (`JSoup`, `Apache Nutch`)
+* **Go**, **Node.js**, etc.
+
+---
+
+### ✅ Summary
+
+A web crawler is simply software that **automates the process of visiting websites and extracting data**—
+commonly used in search engines, business intelligence, and research.
+It’s not owned by any one company; **any developer or organization can create one**.
+
+---
+
+Let me know if you'd like a visual diagram or code example to go along with this.
+
+
 ---
 
 ## 2. High-Level Architecture
@@ -214,6 +271,214 @@ Let me explain each component in detail:
 - **S3** = Long-term, cheap storage for raw HTML (like a warehouse)
 - **PostgreSQL** = Fast, structured queries for metadata (like a filing system)  
 - **Redis** = Lightning-fast temporary storage (like your desk drawer for frequently used items)
+
+# Web Crawler — Low-Level System Design Document
+
+This document describes the **database schema**, **APIs**, **sample data**, and how the APIs interact with the architecture components.
+It is written to be copy-paste ready for a 30-minute system-design interview.
+
+---
+
+## 1. Overview
+
+A distributed web crawler that:
+
+* Accepts seed URLs
+* Fetches HTML pages
+* Extracts links and metadata
+* Stores raw pages and metadata for later indexing or analysis
+
+---
+
+## 2. High-Level Architecture
+
+```mermaid
+graph TD
+    A[URL Frontier / Queue] --> B[Fetcher Service]
+    B --> C[HTML Parser]
+    C --> D[Data Store]
+    C --> E[Link Extractor]
+    E --> A
+```
+
+**Key Services**
+
+* **URL Frontier / Queue** – Kafka, RabbitMQ, or in-memory queue holding URLs to crawl.
+* **Fetcher Service** – Sends HTTP requests and downloads HTML.
+* **HTML Parser** – Cleans and extracts content/links.
+* **Link Extractor** – Feeds new links back into the queue.
+* **Data Store** – PostgreSQL + Amazon S3 for structured metadata and raw HTML.
+* **API Service** – Spring Boot app exposing REST APIs for operators and downstream tools.
+
+---
+
+## 3. Database Schema
+
+**Table: `pages`**
+Stores metadata for every crawled page.
+
+| Column         | Type         | Notes                      |
+| -------------- | ------------ | -------------------------- |
+| id (PK)        | BIGSERIAL    | Auto-increment primary key |
+| url            | TEXT         | Full URL                   |
+| domain         | VARCHAR(255) | Extracted domain           |
+| title          | TEXT         | Page `<title>`             |
+| status_code    | INT          | HTTP status                |
+| content_length | BIGINT       | Size in bytes              |
+| crawl_time     | TIMESTAMP    | When the page was fetched  |
+| s3_path        | TEXT         | S3 location of raw HTML    |
+| links_found    | INT          | Number of links extracted  |
+
+*Indexes:* `(domain)`, `(crawl_time)` for fast filtering.
+
+---
+
+## 4. REST APIs
+
+A lightweight **Spring Boot API Service** provides control and query endpoints.
+
+| Endpoint             | Method   | Purpose                             | Typical Caller                   | Backend Service Handling It            |
+| -------------------- | -------- | ----------------------------------- | -------------------------------- | -------------------------------------- |
+| `/api/v1/seeds`      | **POST** | Add new seed URLs to start a crawl  | Admin dashboard, ops script      | **URL Frontier / Queue Service**       |
+| `/api/v1/status`     | **GET**  | Current crawl stats                 | Monitoring/alerting tools        | **Monitoring module + Queue/Fetcher**  |
+| `/api/v1/pages/{id}` | **GET**  | Retrieve metadata for a single page | Data scientists, analytics tools | **Data Store Service (PostgreSQL/S3)** |
+| `/api/v1/pages`      | **GET**  | Search pages by domain or filter    | Reporting/indexing jobs          | **Data Store Service (PostgreSQL/S3)** |
+
+### 4.1 Add Seed URLs
+
+`POST /api/v1/seeds`
+**Who calls it:** Operator UI or automation script.
+**Hits service:** URL Frontier / Queue.
+
+Request
+
+```json
+{
+  "urls": [
+    "https://example.com",
+    "https://news.ycombinator.com"
+  ]
+}
+```
+
+Response
+
+```json
+{
+  "message": "Seed URLs queued",
+  "count": 2
+}
+```
+
+### 4.2 Get Crawl Status
+
+`GET /api/v1/status`
+**Who calls it:** Monitoring system or on-call engineer.
+**Hits service:** Monitoring module + Queue/Fetcher.
+
+Response
+
+```json
+{
+  "pagesCrawled": 1250,
+  "queueSize": 340,
+  "lastCrawlTime": "2025-09-27T17:05:00Z"
+}
+```
+
+### 4.3 Retrieve Page Metadata
+
+`GET /api/v1/pages/{id}`
+**Who calls it:** Internal analytics or admin UI.
+**Hits service:** Data Store Service.
+
+Response
+
+```json
+{
+  "id": 42,
+  "url": "https://example.com",
+  "domain": "example.com",
+  "title": "Example Domain",
+  "status_code": 200,
+  "content_length": 23456,
+  "crawl_time": "2025-09-27T16:00:00Z",
+  "s3_path": "s3://crawler-raw/example.com/2025-09-27/page42.html",
+  "links_found": 12
+}
+```
+
+### 4.4 Search Pages by Domain
+
+`GET /api/v1/pages?domain=example.com&limit=10`
+**Who calls it:** Reporting or search-index builder.
+**Hits service:** Data Store Service.
+
+Response
+
+```json
+[
+  {
+    "id": 42,
+    "url": "https://example.com",
+    "title": "Example Domain",
+    "status_code": 200,
+    "crawl_time": "2025-09-27T16:00:00Z"
+  },
+  {
+    "id": 43,
+    "url": "https://example.com/about",
+    "title": "About Example",
+    "status_code": 200,
+    "crawl_time": "2025-09-27T16:05:00Z"
+  }
+]
+```
+
+---
+
+## 5. Sample Insert Data
+
+Example row for the `pages` table:
+
+```sql
+INSERT INTO pages
+(url, domain, title, status_code, content_length, crawl_time, s3_path, links_found)
+VALUES
+('https://example.com',
+ 'example.com',
+ 'Example Domain',
+ 200,
+ 23456,
+ '2025-09-27 16:00:00',
+ 's3://crawler-raw/example.com/2025-09-27/page42.html',
+ 12);
+```
+
+---
+
+## 6. Component Interaction (High-Level Flow)
+
+1. **Seed URLs → URL Frontier**
+   *Admin adds seeds through `POST /api/v1/seeds`.*
+2. **Fetcher Service** pulls URLs, downloads HTML.
+3. **HTML Parser & Link Extractor** process pages, add new URLs back to the queue.
+4. **Data Store Service** saves raw HTML (S3) and metadata (PostgreSQL).
+5. **API Service** exposes the above REST endpoints to operators and downstream tools.
+
+---
+
+## 7. Key Considerations
+
+* **Scalability** – Add more fetcher workers to increase crawl rate.
+* **Fault Tolerance** – Kafka/RabbitMQ ensures messages survive crashes.
+* **Politeness** – Rate limiter + robots.txt parser avoid overwhelming sites.
+* **Extensibility** – New parsers or sinks (e.g., Elasticsearch) can be added with minimal change.
+
+---
+
+This single consolidated document contains everything needed to describe the **low-level design**, API responsibilities, callers, and their mapping to the crawler’s architecture.
+
 
 
 
