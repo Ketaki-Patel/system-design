@@ -33,6 +33,14 @@ For media processing background details --> https://github.com/Ketaki-Patel/syst
 Here’s a **comprehensive document** explaining the architecture in your diagram, how it works end-to-end, and suggested database tables with schema. I’ve written it in **Markdown** so you can copy-paste to GitHub or docs.
 
 ---
+### with video viewing 
+<!-- <img width="775" height="964" alt="image" src="https://github.com/user-attachments/assets/a7c25911-ea67-40c6-a7fb-110156d2bc6d" /> -->
+
+<img width="831" height="840" alt="image" src="https://github.com/user-attachments/assets/7d247ee6-caa2-40dc-b558-7241e48f75d0" />
+
+
+--
+
 
 # Scalable Media Processing System Architecture
 
