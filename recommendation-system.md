@@ -1,4 +1,4 @@
- **RecoMind system design** for a YouTube-style short video recommendation system 
+ **RecoMind system design** for a YouTube-style short video recommendation system  (Extension of media-proceessing.md)
 
 ---
 
