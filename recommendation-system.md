@@ -292,19 +292,8 @@ All user interactions (view, like, skip) are published to a Kafka topic.
 
 ---
 
-```
+<img width="1028" height="918" alt="image" src="https://github.com/user-attachments/assets/b331206b-d899-4e1b-84f8-ad94c258a78b" />
 
----
-
-✅ **Now you can paste this directly into GitHub** as a `README.md`, wiki doc, or system spec.
-
-Would you like me to also:
-- Create a diagram (architecture or data flow)?
-- Help you turn this into a small working project?
-- Export this as a PDF or Markdown file?
-
-Let me know!
-```
 
 ## How the recommendation engine works at high level (based on the diagram we created)
 ---
